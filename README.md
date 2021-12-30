@@ -2,17 +2,11 @@
 
 > create a group to collect money and let members withdraw their share
 
-https://buffer.moneypipe.xyz
+Learn more here: https://buffer.moneypipe.xyz
 
 ![buffer.png](buffer.png)
 
-The buffer engine stores ("buffers") all incoming funds and lets its members withdraw according to a pre-defined ratio.
-
-
-The "buffer", as the name says, does NOT immediately propagate funds, but stores ("buffers") everything in the contract, and makes it available for withdrawl. Each member can withdraw their quota based on the pre-set ratio determined when the buffer contract was deployed. For a "push" based approach where funds get split and streamed to each member in realtime, see the [Stream](https://github.com/moneypipe-org/stream) module.
-
-
-> A good way to understand the distiinction is the concept of "Buffer" vs. "Stream" in node.js. While "buffer" stores data, "stream" lets data flow in realtime.
+---
 
 # Contract
 
