@@ -1,6 +1,23 @@
-// SPDX-License-Identifier: MIT
+/////////////////////////////////////////////////////////////////////////////////////
+//
+//  SPDX-License-Identifier: MIT
+//
+//  ███    ███  ██████  ███    ██ ███████ ██    ██ ██████  ██ ██████  ███████
+//  ████  ████ ██    ██ ████   ██ ██       ██  ██  ██   ██ ██ ██   ██ ██     
+//  ██ ████ ██ ██    ██ ██ ██  ██ █████     ████   ██████  ██ ██████  █████  
+//  ██  ██  ██ ██    ██ ██  ██ ██ ██         ██    ██      ██ ██      ██     
+//  ██      ██  ██████  ██   ████ ███████    ██    ██      ██ ██      ███████
+//
+//  ██████  ██    ██ ███████ ███████ ███████ ██████  
+//  ██   ██ ██    ██ ██      ██      ██      ██   ██ 
+//  ██████  ██    ██ █████   █████   █████   ██████  
+//  ██   ██ ██    ██ ██      ██      ██      ██   ██ 
+//  ██████   ██████  ██      ██      ███████ ██   ██ 
+//
+//  https://moneypipe.xyz
+//
+/////////////////////////////////////////////////////////////////////////////////////
 pragma solidity ^0.8.4;
-//import 'hardhat/console.sol';
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 contract Buffer is Initializable {
   mapping (address => uint) public withdrawn;
@@ -24,11 +41,9 @@ contract Buffer is Initializable {
       }
     }
     require(hash == root, "1");
-
     // 2. calculate amount to withdraw based on "amount" (out of 1,000,000,000,000)
     uint payment = totalReceived * amount / 10**12 - withdrawn[account];
-    (bool sent2, ) = payable(address(account)).call{value: payment}("");
-    require(sent2, "2");
+    _transfer(account, payment);
     withdrawn[account] += payment;
   }
   // memory optimization from: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/3039
@@ -38,5 +53,14 @@ contract Buffer is Initializable {
       mstore(0x20, b)
       value := keccak256(0x00, 0x40)
     }
+  }
+  // adopted from https://github.com/lexDAO/Kali/blob/main/contracts/libraries/SafeTransferLib.sol
+  error TransferFailed();
+  function _transfer(address to, uint256 amount) internal {
+    bool callStatus;
+    assembly {
+      callStatus := call(gas(), to, amount, 0, 0, 0, 0)
+    }
+    if (!callStatus) revert TransferFailed();
   }
 }
