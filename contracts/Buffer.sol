@@ -43,8 +43,8 @@ contract Buffer is Initializable {
     require(hash == root, "1");
     // 2. calculate amount to withdraw based on "amount" (out of 1,000,000,000,000)
     uint payment = totalReceived * amount / 10**12 - withdrawn[account];
-    _transfer(account, payment);
     withdrawn[account] += payment;
+    _transfer(account, payment);
   }
   // memory optimization from: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/3039
   function _hash(bytes32 a, bytes32 b) private pure returns (bytes32 value) {
